@@ -24,7 +24,7 @@ function saveOptions() {
         status.className = 'show';
         setTimeout(function () {
             status.className = '';
-        }, 1500);
+        }, 2500);
     });
 }
 
@@ -45,20 +45,12 @@ function htmlToElement(html) {
 }
 
 function generateRule(rule, index) {
-    if (!rule) {
-        rule = {
-            ruleName: '',
-            context: '',
-            checkFunction: '',
-            description: ''
-        };
-    }
     const output = `
     <fieldset class="rule">
     <legend>Rule ${index}</legend>
     <label>
         Rule Name<abbr title="required">*</abbr>:
-        <input type="text" class="rule-name" value="${rule.ruleName}" />
+        <input type="text" class="rule-name" value="${rule.ruleName || ''}" />
     </label>
     <label>
         Context<abbr title="required">*</abbr>:
@@ -71,12 +63,12 @@ function generateRule(rule, index) {
         Check Function<abbr title="required">*</abbr>:
         <br />
         <code class="top-margin">function checkFunction() {</code>
-        <textarea class="check-function codeblock">${rule.checkFunction}</textarea>
+        <textarea class="check-function codeblock">${rule.checkFunction || ''}</textarea>
         <code>}</code>
     </label>
     <label>
         Description:
-        <textarea class="description">${rule.description}</textarea>
+        <textarea class="description">${rule.description || ''}</textarea>
     </label>
     </fieldset>
     `;

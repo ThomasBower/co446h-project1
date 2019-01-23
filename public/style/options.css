@@ -75,7 +75,7 @@ abbr[title=required], #status {
 
 #status {
     opacity: 0;
-    transition: opacity 0.1s ease-in-out;
+    transition: opacity 0.2s ease-in-out;
 }
 
 #status.show {
