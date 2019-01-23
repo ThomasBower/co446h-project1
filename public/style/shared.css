@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css?family=Sarabun:400,700');
+
+* {
+    margin: 0;
+    padding: 0;
+    color: #333;
+    font-size: 1.1em;
+}
+
+body {
+    background-color: #fcfcfc;
+}
+
+header, button {
+    font-family: 'Sarabun', sans-serif;
+    display: flex;
+    justify-content: space-between;
+    background: linear-gradient(to left, #0c645d, #38ef7d);
+    user-select: none;
+}
+
+h1 {
+    font-size: 1.5em;
+    color: #fff;
+    margin: 0;
+    padding: 10px;
+}
+
+.version {
+    font-size: 0.8em;
+    color: #fff;
+    opacity: 0.5;
+    padding: 15px 10px 0;
+    vertical-align: middle;
+}

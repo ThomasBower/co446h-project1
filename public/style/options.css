@@ -1,0 +1,60 @@
+@import url('shared.css');
+
+label {
+    display: block;
+}
+
+input, select, textarea, button {
+    box-sizing: border-box;
+    width: 100%;
+    display: inline-block;
+}
+
+fieldset {
+    padding: 20px;
+}
+
+fieldset, input, select, textarea, button {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+input, select, textarea, button {
+    margin-top: 10px;
+    padding: 10px;
+}
+
+button {
+    border-color: #107a71;
+    color: #fff;
+}
+
+label {
+    margin-bottom: 10px;
+}
+
+abbr[title=required], #status {
+    text-decoration: none;
+    font-weight: bold;
+    color: #f64f59;
+}
+
+.codeblock {
+    font-family: monospace;
+}
+
+.top-margin {
+    display: block;
+    margin-top: 10px;
+}
+
+#rules {
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.rule {
+    margin: 10px;
+    
+}
