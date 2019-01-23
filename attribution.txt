@@ -1,1 +1,2 @@
 Extension Icon: https://www.iconfinder.com/icons/3668850/insurance_protection_safety_shield_icon
+htmlToElement method: https://stackoverflow.com/questions/494143/creating-a-new-dom-element-from-an-html-string-using-built-in-dom-methods-or-pro/35385518#35385518
