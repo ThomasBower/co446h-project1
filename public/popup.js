@@ -63,7 +63,7 @@ function outputResults(results) {
         <p><b>Remedy:</b></p>
         <p>${results.checkResults.remedy}</p>`;
 
-    document.getElementById("checkResults").appendChild(htmlToElement(
+    document.getElementById('checkResults').appendChild(htmlToElement(
         `<li id="${results.id}" class="${severityIndicator}">
                 <img src="img/checkmark.svg" class="icon checkmark" alt="Checkmark" />
                 <img src="img/cross.svg" class="icon cross" alt="Cross" />
@@ -75,3 +75,13 @@ function outputResults(results) {
             </li>`
     ));
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('options-link').addEventListener('click', function() {
+        if (chrome.runtime.openOptionsPage) {
+          chrome.runtime.openOptionsPage();
+        } else {
+          window.open(chrome.runtime.getURL('options.html'));
+        }
+    });
+});

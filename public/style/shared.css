@@ -13,10 +13,15 @@ body {
 
 header, button {
     font-family: 'Sarabun', sans-serif;
+    background: linear-gradient(to left, #0c645d, #30c96b);
+    border: 0 solid #107a71;
+    user-select: none;
+}
+
+header {
+    border-bottom-width: 1px;
     display: flex;
     justify-content: space-between;
-    background: linear-gradient(to left, #0c645d, #30c96b);
-    user-select: none;
 }
 
 h1 {
