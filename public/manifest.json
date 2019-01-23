@@ -4,6 +4,7 @@
   "description": "Identifies common vulnerabilities in websites as you browse the web.",
   "version": "0.0.1",
   "options_page": "options.html",
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "browser_action": {
     "default_popup": "popup.html",
     "default_title": "Open the popup"
@@ -26,6 +27,7 @@
     "128": "img/icon-128.png"
   },
   "permissions": [
-    "storage"
+    "storage",
+    "tabs"
   ]
 }

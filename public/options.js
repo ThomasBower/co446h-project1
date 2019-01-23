@@ -7,9 +7,9 @@ function saveOptions() {
 
     for (let rule of rules) {
         parsedRules.push({
-            ruleName: rule.querySelector('.rule-name').value,
+            name: rule.querySelector('.rule-name').value,
             context: rule.querySelector('.context').value,
-            checkFunction: rule.querySelector('.check-function').value,
+            checkFunctionBody: rule.querySelector('.check-function').value,
             description: rule.querySelector('.description').value
         })
     }
@@ -47,9 +47,9 @@ function htmlToElement(html) {
 function generateRule(rule, index) {
     if (!rule) {
         rule = {
-            ruleName: '',
+            name: '',
             context: '',
-            checkFunction: '',
+            checkFunctionBody: '',
             description: ''
         };
     }
@@ -58,20 +58,20 @@ function generateRule(rule, index) {
     <legend>Rule ${index}</legend>
     <label>
         Rule Name<abbr title="required">*</abbr>:
-        <input type="text" class="rule-name" value="${rule.ruleName}" />
+        <input type="text" class="rule-name" value="${rule.name}" />
     </label>
     <label>
         Context<abbr title="required">*</abbr>:
         <select class="context">
-            <option value="page" ${rule.context === 'page' ? 'selected' : ''}>Page</option>
-            <option value="extension" ${rule.context === 'extension' ? 'selected' : ''}>Extension</option>
+            <option value="PAGE_CONTEXT" ${rule.context === 'PAGE_CONTEXT' ? 'selected' : ''}>Page</option>
+            <option value="EXT_CONTEXT" ${rule.context === 'EXT_CONTEXT' ? 'selected' : ''}>Extension</option>
         </select>
     </label>
     <label>
         Check Function<abbr title="required">*</abbr>:
         <br />
         <code class="top-margin">function checkFunction() {</code>
-        <textarea class="check-function codeblock">${rule.checkFunction}</textarea>
+        <textarea class="check-function codeblock">${rule.checkFunctionBody}</textarea>
         <code>}</code>
     </label>
     <label>

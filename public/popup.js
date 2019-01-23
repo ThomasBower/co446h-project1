@@ -1,26 +1,4 @@
-console.log("Top of popup.js");
-
-// inclusive - the highest number which will e.g. pass
-const PASS_CAP = 0;
-const WARN_CAP = 3;
-
-chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    chrome.tabs.sendMessage(tabs[0].id, {type: "getData"}, function(data) {
-        //outputResults(data); // TODO: DELETE BELOW
-        Object.keys(data).forEach(function(key) {
-            outputResults({
-                ruleName: key,
-                description: key + " and a bit longer description",
-                checkResults: {
-                    severity: data[key] ? 0 : 10,
-                    remedy: "Don't be stupid",
-                    link: "https://lmgtfy.com/?q=" + key
-                },
-            })
-        });
-    });
-});
-
+chrome.runtime.sendMessage({ type: 'getResults' }, results => results.forEach(outputResults));
 
 function htmlToElement(html) {
     var template = document.createElement('template');
@@ -38,25 +16,13 @@ function htmlToElement(html) {
 //       link: url
 //   }
 function outputResults(results) {
-    let severityIndicator;
-    if(results.checkResults.severity <= PASS_CAP) {
-        // pass
-        severityIndicator = 'pass';
-    } else if(results.checkResults.severity <= WARN_CAP) {
-        // warn
-        severityIndicator = 'warn';
-    } else {
-        // fail
-        severityIndicator = 'fail';
-    }
-
     document.getElementById("checkResults").appendChild(htmlToElement(
-        `<li id="${results.name}" class="${severityIndicator}">
+        `<li class="${results.status}">
             <img src="img/checkmark.svg" class="icon checkmark" alt="Checkmark" />
             <img src="img/cross.svg" class="icon cross" alt="Cross" />
             <img src="img/warn.svg" class="icon exclamation" alt="Warn" />
-            ${results.description}
-            <form action="${results.checkResults.link}">
+            ${results.rule.name}
+            <form action="${results.link}">
                 <input type="submit" value="More" />
             </form>
         </li>`
