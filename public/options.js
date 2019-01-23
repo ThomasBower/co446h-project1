@@ -79,6 +79,13 @@ function addRule(rule) {
     document.getElementById('rules').appendChild(generateRule(rule, ++numRules));
 }
 
+document.addEventListener('keydown', function(e){
+    if (e.keyCode == 'S'.charCodeAt(0) && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+        e.preventDefault();
+        saveOptions();
+    }
+});
+
 
 document.addEventListener('DOMContentLoaded', restoreOptions);
 document.getElementById('save').addEventListener('click', saveOptions);

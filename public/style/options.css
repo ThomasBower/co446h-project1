@@ -24,6 +24,11 @@ input, select, textarea, button {
     padding: 10px;
 }
 
+textarea {
+    min-height: 4rem;
+    resize: vertical;
+}
+
 button {
     border-color: #107a71;
     color: #fff;
