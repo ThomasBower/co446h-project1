@@ -1,6 +1,6 @@
 @import url('shared.css');
 
-label {
+label, code {
     display: block;
 }
 
@@ -44,7 +44,6 @@ abbr[title=required], #status {
 }
 
 .top-margin {
-    display: block;
     margin-top: 10px;
 }
 
@@ -56,5 +55,30 @@ abbr[title=required], #status {
 
 .rule {
     margin: 10px;
-    
 }
+
+#panel {
+    justify-content: space-between;
+    box-shadow: 0 1px 1px rgba(0,0,0,.1);
+    padding: 20px;
+    display: flex;
+    background: #fff; 
+}
+
+#panel button {
+    width: 100px;
+    box-sizing: border-box;
+    display: inline-block;
+    margin-top: 0;
+    margin-left: 10px;
+}
+
+#status {
+    opacity: 0;
+    transition: opacity 0.1s ease-in-out;
+}
+
+#status.show {
+    opacity: 1;
+}
+

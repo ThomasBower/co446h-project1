@@ -16,21 +16,21 @@ function saveOptions() {
 
     console.log('rules', parsedRules);
 
-    chrome.storage.local.set({
+    chrome.storage.sync.set({
         rules: parsedRules
     }, function () {
         // Update status to let user know options were saved.
         let status = document.getElementById('status');
-        status.textContent = 'Options saved.';
+        status.className = 'show';
         setTimeout(function () {
-            status.textContent = '';
+            status.className = '';
         }, 1500);
     });
 }
 
 function restoreOptions() {
-    chrome.storage.local.get(['rules'], function (data) {
-        for (let rule of data.rules) {
+    chrome.storage.sync.get(['rules'], function ({ rules }) {
+        for (let rule of rules) {
             addRule(rule);
         }
     });

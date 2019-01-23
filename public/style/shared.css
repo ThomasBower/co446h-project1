@@ -15,7 +15,7 @@ header, button {
     font-family: 'Sarabun', sans-serif;
     display: flex;
     justify-content: space-between;
-    background: linear-gradient(to left, #0c645d, #38ef7d);
+    background: linear-gradient(to left, #0c645d, #30c96b);
     user-select: none;
 }
 
