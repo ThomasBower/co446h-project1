@@ -14,10 +14,14 @@ chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
                 checkResults: {
                     severity: data[key] ? 0 : 10,
                     remedy: "Don't be stupid",
-                    link: "https://lmgtfy.com/?q=" + key
+                    link: "http://lmgtfy.com/?q=" + key
                 },
             })
         });
+
+        // data.forEach(data, (v) => {
+        //     outputResults(v)
+        // });
     });
 });
 
@@ -30,7 +34,8 @@ function htmlToElement(html) {
 }
 
 // results is an object in the format:
-// { ruleName: string,
+// { id: string,
+//   ruleName: string,
 //   decription: string,
 //   checkResults: {
 //       severity: number
@@ -50,15 +55,24 @@ function outputResults(results) {
         severityIndicator = 'fail';
     }
 
+    let description = severityIndicator !== 'pass' ? '' : `
+        <p><b>Description:</b></p>
+        <p>${results.description}</p>`;
+
+    let remedy = severityIndicator !== ('fail' || 'warn') && results.remedy ? '' : `
+        <p><b>Remedy:</b></p>
+        <p>${results.checkResults.remedy}</p>`;
+
     document.getElementById("checkResults").appendChild(htmlToElement(
-        `<li id="${results.name}" class="${severityIndicator}">
+        `<li id="${results.id}" class="${severityIndicator}">
             <img src="img/checkmark.svg" class="icon checkmark" alt="Checkmark" />
             <img src="img/cross.svg" class="icon cross" alt="Cross" />
             <img src="img/warn.svg" class="icon exclamation" alt="Warn" />
-            ${results.description}
-            <form action="${results.checkResults.link}">
-                <input type="submit" value="More" />
-            </form>
+            ${results.ruleName}
+            ${description}
+            ${remedy}
+            <a href="${results.checkResults.link} target="_
+           blank" rel="noreferrer">More</a>
         </li>`
     ));
 }
