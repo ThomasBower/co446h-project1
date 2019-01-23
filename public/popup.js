@@ -55,7 +55,7 @@ function outputResults(results) {
         severityIndicator = 'fail';
     }
 
-    let description = severityIndicator !== 'pass' ? '' : `
+    let description = severityIndicator !== 'pass' && results.description ? '' : `
         <p><b>Description:</b></p>
         <p>${results.description}</p>`;
 
@@ -65,14 +65,13 @@ function outputResults(results) {
 
     document.getElementById("checkResults").appendChild(htmlToElement(
         `<li id="${results.id}" class="${severityIndicator}">
-            <img src="img/checkmark.svg" class="icon checkmark" alt="Checkmark" />
-            <img src="img/cross.svg" class="icon cross" alt="Cross" />
-            <img src="img/warn.svg" class="icon exclamation" alt="Warn" />
-            ${results.ruleName}
-            ${description}
-            ${remedy}
-            <a href="${results.checkResults.link} target="_
-           blank" rel="noreferrer">More</a>
-        </li>`
+                <img src="img/checkmark.svg" class="icon checkmark" alt="Checkmark" />
+                <img src="img/cross.svg" class="icon cross" alt="Cross" />
+                <img src="img/warn.svg" class="icon exclamation" alt="Warn" />
+                ${results.ruleName}
+                ${description}
+                ${remedy}
+                <a href="${results.checkResults.link}" target="_blank" rel="noreferrer">More</a>
+            </li>`
     ));
 }
