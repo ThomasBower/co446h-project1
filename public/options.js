@@ -16,21 +16,21 @@ function saveOptions() {
 
     console.log('rules', parsedRules);
 
-    chrome.storage.local.set({
+    chrome.storage.sync.set({
         rules: parsedRules
     }, function () {
         // Update status to let user know options were saved.
         let status = document.getElementById('status');
-        status.textContent = 'Options saved.';
+        status.className = 'show';
         setTimeout(function () {
-            status.textContent = '';
-        }, 1500);
+            status.className = '';
+        }, 2500);
     });
 }
 
 function restoreOptions() {
-    chrome.storage.local.get(['rules'], function (data) {
-        for (let rule of data.rules) {
+    chrome.storage.sync.get(['rules'], function ({ rules }) {
+        for (let rule of rules) {
             addRule(rule);
         }
     });
@@ -45,20 +45,12 @@ function htmlToElement(html) {
 }
 
 function generateRule(rule, index) {
-    if (!rule) {
-        rule = {
-            name: '',
-            context: '',
-            checkFunctionBody: '',
-            description: ''
-        };
-    }
     const output = `
     <fieldset class="rule">
     <legend>Rule ${index}</legend>
     <label>
         Rule Name<abbr title="required">*</abbr>:
-        <input type="text" class="rule-name" value="${rule.name}" />
+        <input type="text" class="rule-name" value="${rule.name || ''}" />
     </label>
     <label>
         Context<abbr title="required">*</abbr>:
@@ -71,12 +63,12 @@ function generateRule(rule, index) {
         Check Function<abbr title="required">*</abbr>:
         <br />
         <code class="top-margin">function checkFunction() {</code>
-        <textarea class="check-function codeblock">${rule.checkFunctionBody}</textarea>
+        <textarea class="check-function codeblock">${rule.checkFunctionBody || ''}</textarea>
         <code>}</code>
     </label>
     <label>
         Description:
-        <textarea class="description">${rule.description}</textarea>
+        <textarea class="description">${rule.description || ''}</textarea>
     </label>
     </fieldset>
     `;
@@ -86,6 +78,13 @@ function generateRule(rule, index) {
 function addRule(rule) {
     document.getElementById('rules').appendChild(generateRule(rule, ++numRules));
 }
+
+document.addEventListener('keydown', function(e){
+    if (e.keyCode == 'S'.charCodeAt(0) && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+        e.preventDefault();
+        saveOptions();
+    }
+});
 
 
 document.addEventListener('DOMContentLoaded', restoreOptions);

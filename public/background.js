@@ -92,7 +92,7 @@ function runChecks() {
 }
 
 function getUserRules() {
-    return new Promise((resolve, reject) => chrome.storage.local.get(['rules'], ({ rules }) => resolve(rules)));
+    return new Promise((resolve, reject) => chrome.storage.sync.get(['rules'], ({ rules }) => resolve(rules)));
 }
 
 function updateIconNumber(num) {
@@ -139,7 +139,7 @@ class CheckResult {
     }
 }
 
-getUserRules().then(rules => { if (!rules) chrome.storage.local.set({ rules: [] }); });
+getUserRules().then(rules => { if (!rules) chrome.storage.sync.set({ rules: [] }); });
 
 
 chrome.tabs.onUpdated.addListener(function (tabId , info, tab) {

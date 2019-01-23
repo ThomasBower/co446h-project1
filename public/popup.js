@@ -8,7 +8,8 @@ function htmlToElement(html) {
 }
 
 // results is an object in the format:
-// { ruleName: string,
+// { id: string,
+//   ruleName: string,
 //   decription: string,
 //   checkResults: {
 //       severity: number
@@ -22,9 +23,18 @@ function outputResults(results) {
             <img src="img/cross.svg" class="icon cross" alt="Cross" />
             <img src="img/warn.svg" class="icon exclamation" alt="Warn" />
             ${results.rule.name}
-            <form action="${results.link}">
-                <input type="submit" value="More" />
-            </form>
+            ${!results.remedy ? '' : `<h3>Remedy:</h3><p>${results.remedy}</p>`}
+            ${!results.link ? '' : `<a href="${results.link}" target="_blank" rel="noreferrer">More</a>`}
         </li>`
     ));
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('options-link').addEventListener('click', function() {
+        if (chrome.runtime.openOptionsPage) {
+          chrome.runtime.openOptionsPage();
+        } else {
+          window.open(chrome.runtime.getURL('options.html'));
+        }
+    });
+});
