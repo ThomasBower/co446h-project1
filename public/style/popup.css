@@ -22,8 +22,6 @@ li:nth-of-type(2n) {
     margin-right: 5px;
 }
 
-
-
 .fail > .checkmark, .fail > .exclamation, 
 .pass > .cross, .pass > .exclamation,
 .warn > .checkmark, .warn > .cross {

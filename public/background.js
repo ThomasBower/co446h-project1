@@ -1,81 +1,7 @@
-const PAGE_CONTEXT = 'PAGE_CONTEXT';
-const EXT_CONTEXT = 'EXT_CONTEXT';
-
-const BuiltInRules = [{
-    id: 'usesSSL',
-    name: 'Uses SSL',
-    description: '',
-    context: PAGE_CONTEXT,
-    checkFunctionBody: `
-        return {
-            severity: location.protocol === 'https:' ? 0 : 3
-        };
-    `
-}, {
-    name: 'No Mixed Active Content',
-    description: '',
-    context: PAGE_CONTEXT,
-    checkFunctionBody: `
-        const PASS_RESULT = { severity: 0 };
-        if (location.protocol !== 'https:') return PASS_RESULT;
-        let tags = document.querySelectorAll('script[src], form[action],'
-            + 'iframe[src], embed[src], source[src], param[value], a[href]');
-        for (let tag of tags) {
-            let source;
-            switch (tag.tagName) {
-                case 'script':
-                case 'iframe':
-                case 'embed':
-                case 'source':
-                source = tag.getAttribute('src');
-                break;
-                case 'form':
-                source = tag.getAttribute('action');
-                break;
-                case 'param':
-                source = tag.getAttribute('value');
-                break;
-                case 'a':
-                source = tag.getAttribute('href');
-            }
-            if (!source) {
-                continue;
-            }
-            if (source.split('/')[0] === 'http:') {
-                return {
-                    severity: 6
-                }
-            }
-        }
-        return PASS_RESULT;
-    `
-}, {
-    id: 'noMixedPassiveContent',
-    name: 'No Mixed Passive Content',
-    description: '',
-    context: PAGE_CONTEXT,
-    checkFunctionBody: `
-        const PASS_RESULT = { severity: 0 };
-        if (location.protocol !== 'https:') return PASS_RESULT;
-        let tags = document.querySelectorAll('img[src], object[data], audio[src],' + 'video[src]');
-        for (let tag of tags) {
-            let source = tag.tagName !== 'object' ?
-            tag.getAttribute('src') : tag.getAttribute('data');
-            if (source.split('/')[0] === 'http:') {
-                return {
-                    severity: 1
-                };
-            }
-        }
-        return PASS_RESULT;
-    `
-}];
-
 let currentResults = [];
 
 function runChecks() {
-    return getUserRules()
-    .then(userRules => [...BuiltInRules, ...userRules])
+    return getRules()
     .then(rules => Promise.all(rules.map(rule => {
         const checkFunctionString = `() => { ${rule.checkFunctionBody } }`;
         let result = {};
@@ -91,8 +17,10 @@ function runChecks() {
     .catch(err => console.error(err));
 }
 
-function getUserRules() {
-    return new Promise((resolve, reject) => chrome.storage.sync.get(['rules'], ({ rules }) => resolve(rules)));
+function getRules() {
+    return new Promise((resolve, reject) => 
+        chrome.storage.sync.get(['rules', 'defaultRules'], ({ rules, defaultRules }) => 
+            resolve([...(defaultRules||[]), ...(rules||[])])));
 }
 
 function updateIconNumber(num) {
@@ -138,9 +66,6 @@ class CheckResult {
         return { ...this, status: this.getStatus() };
     }
 }
-
-getUserRules().then(rules => { if (!rules) chrome.storage.sync.set({ rules: [] }); });
-
 
 chrome.tabs.onUpdated.addListener(function (tabId , info, tab) {
   if (info.status === 'complete') {

@@ -38,3 +38,8 @@ h1 {
     padding: 15px 10px 0;
     vertical-align: middle;
 }
+
+[disabled] {
+    background-color: #ddd;
+    color: #888;
+}

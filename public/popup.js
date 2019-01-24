@@ -11,6 +11,7 @@ function htmlToElement(html) {
 // { id: string,
 //   ruleName: string,
 //   decription: string,
+//   default: boolean,
 //   checkResults: {
 //       severity: number
 //       remedy: string,

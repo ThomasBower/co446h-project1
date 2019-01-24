@@ -2,7 +2,7 @@ let numRules = 0;
 
 // Saves options to chrome.storage
 function saveOptions() {
-    const rules = document.querySelectorAll('.rule');
+    const rules = document.querySelectorAll('.rule:not(.default)');
     const parsedRules = [];
 
     for (let rule of rules) {
@@ -29,7 +29,10 @@ function saveOptions() {
 }
 
 function restoreOptions() {
-    chrome.storage.sync.get(['rules'], function ({ rules }) {
+    chrome.storage.sync.get(['rules', 'defaultRules'], function ({ rules, defaultRules }) {
+        for (let rule of defaultRules) {
+            addRule(rule, true);
+        }
         for (let rule of rules) {
             addRule(rule);
         }
@@ -44,17 +47,17 @@ function htmlToElement(html) {
     return template.content.firstChild;
 }
 
-function generateRule(rule, index) {
+function generateRule(rule, index, isDefault) {
     const output = `
-    <fieldset class="rule">
+    <fieldset class="rule ${isDefault ? 'default' : ''}">
     <legend>Rule ${index}</legend>
     <label>
         Rule Name<abbr title="required">*</abbr>:
-        <input type="text" class="rule-name" value="${rule.name || ''}" />
+        <input type="text" class="rule-name" value="${rule.name || ''}" ${isDefault ? 'disabled' : ''} />
     </label>
     <label>
         Context<abbr title="required">*</abbr>:
-        <select class="context">
+        <select class="context" ${isDefault ? 'disabled' : ''}>
             <option value="PAGE_CONTEXT" ${rule.context === 'PAGE_CONTEXT' ? 'selected' : ''}>Page</option>
             <option value="EXT_CONTEXT" ${rule.context === 'EXT_CONTEXT' ? 'selected' : ''}>Extension</option>
         </select>
@@ -63,20 +66,20 @@ function generateRule(rule, index) {
         Check Function<abbr title="required">*</abbr>:
         <br />
         <code class="top-margin">function checkFunction() {</code>
-        <textarea class="check-function codeblock">${rule.checkFunctionBody || ''}</textarea>
+        <textarea class="check-function codeblock" ${isDefault ? 'disabled' : ''}>${rule.checkFunctionBody || ''}</textarea>
         <code>}</code>
     </label>
     <label>
         Description:
-        <textarea class="description">${rule.description || ''}</textarea>
+        <textarea class="description" ${isDefault ? 'disabled' : ''}>${rule.description || ''}</textarea>
     </label>
     </fieldset>
     `;
     return htmlToElement(output);
 }
 
-function addRule(rule) {
-    document.getElementById('rules').appendChild(generateRule(rule, ++numRules));
+function addRule(rule, isDefault = false) {
+    document.getElementById('rules').appendChild(generateRule(rule, ++numRules, isDefault));
 }
 
 document.addEventListener('keydown', function(e){
@@ -85,7 +88,6 @@ document.addEventListener('keydown', function(e){
         saveOptions();
     }
 });
-
 
 document.addEventListener('DOMContentLoaded', restoreOptions);
 document.getElementById('save').addEventListener('click', saveOptions);
