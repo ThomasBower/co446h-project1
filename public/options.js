@@ -29,6 +29,7 @@ function saveOptions() {
 }
 
 function restoreOptions() {
+    numRules = 0;
     chrome.storage.sync.get(['rules', 'defaultRules'], function ({ rules, defaultRules }) {
         for (let rule of defaultRules) {
             addRule(rule, true);
@@ -36,6 +37,12 @@ function restoreOptions() {
         for (let rule of rules) {
             addRule(rule);
         }
+        document.querySelectorAll('.delete').forEach((button) => {
+            button.addEventListener('click', function(e) {
+                button.parentElement.remove();
+                e.preventDefault();
+            });
+        });
     });
 }
 
@@ -73,16 +80,23 @@ function generateRule(rule, index, isDefault) {
         Description:
         <textarea class="description" ${isDefault ? 'disabled' : ''}>${rule.description || ''}</textarea>
     </label>
+    ${!isDefault ? `<a href="#" class="delete">Delete</a>` : ''}
     </fieldset>
     `;
     return htmlToElement(output);
 }
 
 function addRule(rule, isDefault = false) {
-    document.getElementById('rules').appendChild(generateRule(rule, ++numRules, isDefault));
+    let elem = document.getElementById('rules').appendChild(generateRule(rule, ++numRules, isDefault));
+    if (!isDefault) {
+        elem.querySelector('.delete').addEventListener('click', function(e) {
+            elem.querySelector('.delete').parentElement.remove();
+            e.preventDefault();
+        });
+    }
 }
 
-document.addEventListener('keydown', function(e){
+document.addEventListener('keydown', function(e) {
     if (e.keyCode == 'S'.charCodeAt(0) && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
         e.preventDefault();
         saveOptions();

@@ -94,3 +94,6 @@ abbr[title=required], #status {
     opacity: 1;
 }
 
+.delete {
+    float: right;
+}
