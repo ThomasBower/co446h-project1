@@ -14,6 +14,18 @@ li:nth-of-type(2n) {
     background-color: #fafafa;
 }
 
+details summary + * {
+    margin-top: 10px;
+}
+
+summary {
+    outline: none;
+}
+
+.empty summary::-webkit-details-marker {
+    opacity: 0;
+}
+
 .icon {
     display: inline-block;
     vertical-align: middle;
@@ -22,8 +34,8 @@ li:nth-of-type(2n) {
     margin-right: 5px;
 }
 
-.fail > .checkmark, .fail > .exclamation, 
-.pass > .cross, .pass > .exclamation,
-.warn > .checkmark, .warn > .cross {
+.fail .checkmark, .fail .exclamation, 
+.pass .cross, .pass .exclamation,
+.warn .checkmark, .warn .cross {
     display: none;
 }

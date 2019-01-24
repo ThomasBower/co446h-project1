@@ -19,13 +19,17 @@ function htmlToElement(html) {
 //   }
 function outputResults(results) {
     document.getElementById("checkResults").appendChild(htmlToElement(
-        `<li class="${results.status}">
-            <img src="img/checkmark.svg" class="icon checkmark" alt="Checkmark" />
-            <img src="img/cross.svg" class="icon cross" alt="Cross" />
-            <img src="img/warn.svg" class="icon exclamation" alt="Warn" />
-            ${results.rule.name}
-            ${!results.remedy ? '' : `<h3>Remedy:</h3><p>${results.remedy}</p>`}
-            ${!results.link ? '' : `<a href="${results.link}" target="_blank" rel="noreferrer">More</a>`}
+        `<li class="${results.status} ${!results.remedy && !results.rule.link ? 'empty' : ''}">
+            <details>
+                <summary>
+                    <img src="img/checkmark.svg" class="icon checkmark" alt="Checkmark" />
+                    <img src="img/cross.svg" class="icon cross" alt="Cross" />
+                    <img src="img/warn.svg" class="icon exclamation" alt="Warn" />
+                    ${results.rule.name}
+                </summary>
+                ${!results.remedy ? '' : `<p>${results.remedy}</p>`}
+                ${!results.rule.link ? '' : `<a class="button" href="${results.rule.link}" target="_blank" rel="noreferrer">Learn More</a>`}
+            </details>
         </li>`
     ));
 }
