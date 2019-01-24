@@ -7,6 +7,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 log('Loaded content script');
 
 function log(message, logType = 'log') {
-    if (logType !== 'log' && logType !== 'error' && logType !== 'info' && logType !== 'warn')
+    if (logType !== 'log' && logType !== 'error' && logType !== 'info' && logType !== 'warn') return;
     console[logType]('[WebAudit] ', message);
 }
