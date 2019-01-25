@@ -9,7 +9,6 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     }
 
     chrome.runtime.sendMessage({ type: 'getResults', tabId: currTab.id }, results => {
-        console.log(results);
         return results.forEach(outputResults);
     });
 });
