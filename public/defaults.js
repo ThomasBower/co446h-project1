@@ -151,7 +151,14 @@ const DefaultRules = [{
     link: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP',
     context: EXT_CONTEXT,
     checkFunction(requests) {
-        const cspHeaderObject = requests.find(r => r.type === 'main_frame').responseHeaders.find(({ name }) => name.toLowerCase() === 'content-security-policy');
+        const mainFrameRequest = requests.find(r => r.type === 'main_frame');
+        if(!mainFrameRequest) {
+            return {
+                severity: 2,
+                remedy: "Error: Unable to find main document request. Please try to refresh the page."
+            };
+        }
+        const cspHeaderObject = mainFrameRequest.responseHeaders.find(({ name }) => name.toLowerCase() === 'content-security-policy');
         if(!cspHeaderObject) {
             // if CSP does not exist, then no point in doing any more checks on it!
             return {
