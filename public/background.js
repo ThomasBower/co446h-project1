@@ -1,4 +1,5 @@
 const UNDEFINED_RESULT = { severity: -1, remedy: 'Rule check function failed to return a result' };
+const REQUEST_TIME_THRESHOLD = 50;
 const FAIL_BADGE_COLOUR = [246, 79, 89, 255];
 const WARN_BADGE_COLOUR = [255, 224, 0, 255];
 const PASS_BADGE_COLOUR = [56, 239, 125, 255];
@@ -19,6 +20,7 @@ function runChecks() {
 
 function runRule(rule) {
     return getCurrentTab().then(currTab => {
+        if (!currTab) return UNDEFINED_RESULT;
         if (rule.context === PAGE_CONTEXT) {
             const checkFunctionString = `() => { ${rule.checkFunctionBody } }`;
             return sendMessage(currTab.id, { type: 'runCheck', checkFunctionString });
@@ -57,8 +59,9 @@ class CheckResult {
 }
 
 function updateIconBadge() {
-    getCurrentTab().then(({ id: tabId }) => {
-        const tabInfo = getTabInfo(tabId);
+    getCurrentTab().then((tab) => {
+        if (!tab) return;
+        const tabInfo = getTabInfo(tab.id);
 
         // Disable action if on an internal page, otherwise enable
         if (tabInfo.internalPage) return disableBadge();
@@ -99,7 +102,7 @@ chrome.webRequest.onCompleted.addListener(requestDetails => {
 // Run checks when a webpage is loaded
 chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
     const tabInfo = getTabInfo(tabId);
-    if (info.status === 'loading') resetTabInfo(tabId);
+    if (info.status === 'loading' && tabInfo.url !== tab.url) resetTabInfo(tabId, tab.url);
 
     tabInfo.internalPage = checkInternal(tab.url);
     updateIconBadge(tabId);
@@ -130,8 +133,10 @@ function getTabInfo(tabId) {
     if (!tabs[tabId]) resetTabInfo(tabId);
     return tabs[tabId];
 }
-function resetTabInfo(tabId) {
-    tabs[tabId] = { requests: [] }
+function resetTabInfo(tabId, url) {
+    const oldInfo = tabs[tabId] || { requests: [], noOldInfo: true };
+    const resetTime = (new Date()).getTime();
+    tabs[tabId] = { requests: oldInfo.requests.filter(r => (resetTime - r.timeStamp) < REQUEST_TIME_THRESHOLD), url };
 }
 
 function checkInternal(urlString) {
