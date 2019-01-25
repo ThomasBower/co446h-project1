@@ -1,5 +1,5 @@
 let messengerCSP = `default-src * data: blob:;script-src *.facebook.com *.fbcdn.net *.facebook.net *.google-analytics.com *.virtualearth.net *.google.com 127.0.0.1:* *.spotilocal.com:* 'unsafe-inline' 'unsafe-eval' blob: data: 'self' *.messenger.com;style-src data: blob: 'unsafe-inline' * *.messenger.com;connect-src *.facebook.com facebook.com *.fbcdn.net *.facebook.net *.spotilocal.com:* wss://*.facebook.com:* https://fb.scanandcleanlocal.com:* attachment.fbsbx.com ws://localhost:* blob: *.cdninstagram.com 'self' *.messenger.com wss://*.messenger.com:*;font-src *.messenger.com *.facebook.com static.xx.fbcdn.net data:;`;
-let noDefaultOneStar = "img-src *; style-src: 'self'";
+let noDefaultTwoStars = "img-src *; media-src *; style-src: 'self'";
 
 const PASS_RESULT = {
     severity: 0
@@ -34,7 +34,13 @@ function checkFunction(testCspString) { // TODO this won't be the actual args
         csp[operator] = arguments;
     });
     // --------------------------------
+    console.log(' ');
+    console.log('----------------------------');
+    console.log('------ CSP OBJECT ---------');
     console.log(csp);
+    console.log('----------------------------');
+    console.log(' ');
+
     let maxSeverity = 0;
     let failures = [];
 
@@ -67,6 +73,35 @@ function checkFunction(testCspString) { // TODO this won't be the actual args
             </li>`);
     }
 
+    // --- CHECK -----
+    // check for wildcard '*'
+    let listOfDirectivesWhichHaveStarFailures = [];
+    for(const [directive, sources] of Object.entries(csp)) {
+        sources.forEach(function (src) {
+            if(src === '*') {
+                listOfDirectivesWhichHaveStarFailures.push(directive);
+            }
+        });
+    }
+    if(listOfDirectivesWhichHaveStarFailures.length > 0) {
+        let executableDirectives = ['default-src', 'script-src', 'object-src'];
+        let starFailureSeverity;
+        if(listOfDirectivesWhichHaveStarFailures.some((d) => executableDirectives.includes(d))) {
+            // consider a * in the executable directives to be _slightly_ worse than other directives
+            starFailureSeverity = 9;
+        } else {
+            starFailureSeverity = 7;
+        }
+        maxSeverity = Math.max(maxSeverity, starFailureSeverity);
+        failures.push(
+            `<li class="critical">
+                You are using a wildcard '<code>*</code>'
+                for the following directive${listOfDirectivesWhichHaveStarFailures.length === 1 ? "s" : ""}:
+                <br> ${listOfDirectivesWhichHaveStarFailures.join(", ")}.
+                <br> Severity ${starFailureSeverity}.
+            </li>`);
+    }
+
     // --- RETURN RESULTS -----
     if(failures.length === 0) {
         return PASS_RESULT;
@@ -81,5 +116,5 @@ function checkFunction(testCspString) { // TODO this won't be the actual args
     }
 }
 
-//console.log(checkFunction(messengerCSP));
-console.log(checkFunction(noDefaultOneStar));
+console.log(checkFunction(messengerCSP));
+console.log(checkFunction(noDefaultTwoStars));
