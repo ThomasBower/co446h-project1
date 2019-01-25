@@ -72,6 +72,7 @@ function checkFunction(testCspString) { // TODO this won't be the actual args
                 as you have no policy covering the content of <code>&lt;script&gt;</code> or <code>&lt;object>&gt;</code> tags. 
             </li>`);
     }
+    // --------
 
     // --- CHECK -----
     // check for wildcard '*'
@@ -101,6 +102,7 @@ function checkFunction(testCspString) { // TODO this won't be the actual args
                 <br> Severity ${starFailureSeverity}.
             </li>`);
     }
+    // --------
 
     // --- RETURN RESULTS -----
     if(failures.length === 0) {
