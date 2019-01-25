@@ -336,6 +336,34 @@ const DefaultRules = [{
                 <br>Severity ${onlyDefaultSrcUsedSeverity}.
             </li>`);
         }
+        // --------
+
+        // --- CHECK -----
+        // data: blob: or filesystem: should not be used as srcs
+        let listOfDirectivesWhichUseDataEtc = [];
+        for(const [directive, sources] of Object.entries(csp)) {
+            sources.forEach(function (src) {
+                if(src.includes('data:')
+                    || src.includes('blob:')
+                    || src.includes('filesystem:')
+                ) {
+                    listOfDirectivesWhichUseDataEtc.push(directive);
+                }
+            });
+        }
+        if(listOfDirectivesWhichUseDataEtc.length > 0) {
+            let dataEtcSeverity = 9;
+            maxSeverity = Math.max(maxSeverity, dataEtcSeverity);
+            failures.push(
+                `<li class="critical">
+                The CSP declares one of '<code>data:</code>', '<code>blob:</code>', '<code>filesystem:</code>' as an src within directive${listOfDirectivesWhichUseDataEtc.length > 1 ? "s" : ""}:
+                <br> ${listOfDirectivesWhichUseDataEtc.map((d) => `<code>${d}</code>`).join(", ")}.
+                <br> Please note that '<code>data:</code>' is equivalent to '<code>unsafe-inline</code>', 
+                        and '<code>blob:</code>' or '<code>filesystem:</code>' is equivalent to allowing '<code>unsafe-eval</code>'.
+                <br>Severity ${dataEtcSeverity}.
+            </li>`);
+        }
+        // --------
 
         // --- RETURN RESULTS -----
         if(failures.length === 0) {
