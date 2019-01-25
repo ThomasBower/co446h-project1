@@ -2,3 +2,4 @@ Extension Icon: https://www.iconfinder.com/icons/3668850/insurance_protection_sa
 htmlToElement method: https://stackoverflow.com/questions/494143/creating-a-new-dom-element-from-an-html-string-using-built-in-dom-methods-or-pro/35385518#35385518
 Cog Icon: https://www.iconfinder.com/icons/118694/cog_icon
 Some key CSP Info on XSS: https://storage.googleapis.com/pub-tools-public-publication-data/pdf/45542.pdf
+CSP docs: https://w3c.github.io/webappsec-csp/2/
