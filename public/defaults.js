@@ -133,13 +133,11 @@ const defaultRules = [{
     link: 'https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity',
     context: PAGE_CONTEXT,
     checkFunction() {
-        log("YAAT")
         let tags = document.querySelectorAll('link, script');
         let failures = "";
         for (let tag of tags) {
             let source = tag.tagName.toLowerCase() === 'script' ? tag.src : tag.href;
             if (!source) continue;
-            log("HERE");
             if (location.host !== source.split('/')[2]) {
                 failures += `<li class="non-critical"><code>${getCSSPath(tag)}</code> for source <code>${source}</code>
                              does not contain an <code>integrity</code> attribute. You can fix this by adding generating

@@ -66,3 +66,10 @@ summary {
     color: inherit;
     line-height: 1.4rem;
 }
+
+#options-link {
+    display: block;
+    height: 22px;
+    margin: 18px 10px 0;
+    font-size: 0;
+}
