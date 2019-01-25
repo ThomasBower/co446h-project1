@@ -129,7 +129,6 @@ function checkFunction(testCspString) { // TODO this won't be the actual args
                 <br>Severity ${unsafeEvalSeverity}.
             </li>`);
     }
-
     // --------
 
     // --- CHECK -----
@@ -165,6 +164,31 @@ function checkFunction(testCspString) { // TODO this won't be the actual args
                 <br> This allows for inline <code>&lt;script&gt;</code> code, which may be subject to XSS.
                         Consider using a <code>nonce-</code> directive.
                 <br>Severity ${unsafeInlineSeverity}.
+            </li>`);
+    }
+    // --------
+
+    // --- CHECK -----
+    // default-src shouldn't be the only csp directive
+    if(Object.keys(csp).length === 1
+        && Object.keys(csp)[0] === 'default-src'
+        && Object.values[0] !== '\'None\''
+        && Object.values[0] !== '\'self\''
+    ) {
+        let onlyDefaultSrcUsedSeverity = 4;
+        maxSeverity = Math.max(maxSeverity, onlyDefaultSrcUsedSeverity);
+        failures.push(
+            `<li class="non-critical">
+                The CSP only uses directive '<code>default-src</code>'.
+                This may be a sign that CSPs aren't being used correctly,
+                as the '<code>default-src</code>' applies to all media types, 
+                including scripts.
+                <br>In order to be as restrictive as possible in the content
+                which is allowed to run on the page, consider using more
+                directives (start by setting '<code>default-src</code>'
+                to 'none' or 'self', and then adding the other directives
+                you may need. 
+                <br>Severity ${onlyDefaultSrcUsedSeverity}.
             </li>`);
     }
 
