@@ -1,3 +1,5 @@
+const MAX_RATING = 10;
+
 chrome.runtime.sendMessage({ type: 'getResults' }, results => results.forEach(outputResults));
 
 function htmlToElement(html) {
@@ -25,7 +27,7 @@ function outputResults(results) {
                     <img src="img/checkmark.svg" class="icon checkmark" alt="Checkmark" />
                     <img src="img/cross.svg" class="icon cross" alt="Cross" />
                     <img src="img/warn.svg" class="icon exclamation" alt="Warn" />
-                    ${results.rule.name}
+                    ${results.rule.name} (<span class="rating">${Math.max(0, MAX_RATING - Math.round(results.severity))}/${MAX_RATING}</span>)
                 </summary>
                 ${!results.remedy ? '<p>No errors to report.</p>' : `<p>${results.remedy}</p>`}
                 ${!results.rule.link ? '' : `<a class="button" href="${results.rule.link}" target="_blank" rel="noreferrer">Learn More</a>`}

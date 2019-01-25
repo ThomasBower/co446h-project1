@@ -35,6 +35,10 @@ summary {
     display: none;
 }
 
+.pass .rating { color: #38ef7d; }
+.warn .rating { color: #ffe000; }
+.fail .rating { color: #f64f59; }
+
 .failures li {
     border: 1px solid black;
     border-radius: 5px;

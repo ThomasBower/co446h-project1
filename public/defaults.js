@@ -10,23 +10,23 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 const defaultRules = [{
-    name: 'Uses SSL',
+    name: 'SSL',
     description: '',
     link: 'https://developer.mozilla.org/en-US/docs/Glossary/https',
     context: PAGE_CONTEXT,
     checkFunction() {
         if (location.protocol === 'https:') return { severity: 0 };
         return {
-            severity: 3,
+            severity: 10,
             remedy: `
                 <ul class="failures">
-                    <li class="non-critical">This site, <code>${location}</code> uses HTTP, meaning that data is transmitted unsecured across the network.
+                    <li class="critical">This site, <code>${location}</code> uses HTTP, meaning that data is transmitted unsecured across the network.
                     Seek assistance from your web host to buy and set up a certificate.</li>
                 </ul>`
         };
     }
 }, {
-    name: 'No Mixed Active Content',
+    name: 'Mixed Active Content',
     description: '',
     link: 'https://developer.mozilla.org/en-US/docs/Security/Mixed_content#Mixed_active_content',
     context: PAGE_CONTEXT,
@@ -69,7 +69,7 @@ const defaultRules = [{
         } : PASS_RESULT;
     }
 }, {
-    name: 'No Mixed Passive Content',
+    name: 'Mixed Passive Content',
     description: '',
     link: 'https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content#Mixed_passivedisplay_content',
     context: PAGE_CONTEXT,
@@ -113,7 +113,7 @@ const defaultRules = [{
                 continue;
             }
             if (!Array.from(form.querySelectorAll('input[type="hidden"]')).some(input => entropy(input.value) > SUITABLE_ENTROPY)) {
-                severity += 0.5;
+                severity += 0.2;
                 failures += `<li class="non-critical"><code>${getCSSPath(form)}</code> contains hidden fields, 
                              however the value has a low entropy indicating that it may
                              not include a CSRF token.</li>`;
