@@ -36,11 +36,15 @@ summary {
 }
 
 .failures li {
-    font-size: 0.9rem;
     border: 1px solid black;
     border-radius: 5px;
     margin-top: 10px;
     padding: 10px;
+}
+
+.failures li, .failures li a {
+    font-size: 0.9rem;
+    color: inherit;
 }
 
 .failures li.critical {
