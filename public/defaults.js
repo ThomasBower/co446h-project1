@@ -189,29 +189,33 @@ const DefaultRules = [{
         // --- CHECK -----
         // if a CSP has script-src it should also have object-src
         // if it has neither, it should have a default-src
+        const xorScriptObjectSrcSeverity = 8;
         if(('script-src' in csp) && !('object-src' in csp)) {
-            maxSeverity = Math.max(maxSeverity, 8);
+            maxSeverity = Math.max(maxSeverity, xorScriptObjectSrcSeverity);
             failures.push(
                 `<li class="critical">
                 The CSP has a <code>script-src</code> directive but not a <code>object-src</code> directive.
                 This can leave the page open to XSS attacks, because malicious code in a less secure policy
                 can bypass the more secure policy, if part of <code>&lt;script&gt;</code> or <code>&lt;object>&gt;</code> tags. 
+                <br> Severity ${xorScriptObjectSrcSeverity}.
             </li>`);
         } else if(!('script-src' in csp) && ('object-src' in csp)) {
-            maxSeverity = Math.max(maxSeverity, 8);
+            maxSeverity = Math.max(maxSeverity, xorScriptObjectSrcSeverity);
             failures.push(
                 `<li class="critical">
                 The CSP has a <code>object-src</code> directive but not a <code>script-src</code> directive.
                 This can leave the page open to XSS attacks, because malicious code in a less secure policy
                 can bypass the more secure policy, if part of <code>&lt;script&gt;</code> or <code>&lt;object>&gt;</code> tags. 
+                <br> Severity ${xorScriptObjectSrcSeverity}.
             </li>`);
         } else if(!('script-src' in csp) && !('object-src' in csp) && !('default-src' in csp)) {
-            maxSeverity = Math.max(maxSeverity, 8);
+            maxSeverity = Math.max(maxSeverity, xorScriptObjectSrcSeverity);
             failures.push(
                 `<li class="critical">
                 The CSP has no <code>object-src</code>, <code>script-src</code> or <code>default-src</code>directives.
                 This can leave the page open to XSS attacks,
                 as you have no policy covering the content of <code>&lt;script&gt;</code> or <code>&lt;object>&gt;</code> tags. 
+                <br>  Severity ${xorScriptObjectSrcSeverity}.
             </li>`);
         }
         // --------
@@ -240,7 +244,7 @@ const DefaultRules = [{
                 `<li class="critical">
                 The CSP is using a wildcard '<code>*</code>'
                 for the following directive${listOfDirectivesWhichHaveStarFailures.length > 1 ? "s" : ""}:
-                <br> ${listOfDirectivesWhichHaveStarFailures.join(", ")}.
+                ${listOfDirectivesWhichHaveStarFailures.map((d) => `<code>${d}</code>`).join(", ")}.
                 <br> Severity ${starFailureSeverity}.
             </li>`);
         }
@@ -262,11 +266,49 @@ const DefaultRules = [{
             failures.push(
                 `<li class="critical">
                 The CSP declares '<code>unsafeEval</code>' within directive${listOfDirectivesWhichUseUnsafeEval.length > 1 ? "s" : ""}:
-                <br> ${listOfDirectivesWhichUseUnsafeEval.join(", ")}.
+                ${listOfDirectivesWhichUseUnsafeEval.map((d) => `<code>${d}</code>`).join(", ")}.
                 <br> This allows for calls to javascript's <code>eval()</code>
                         method which allows for arbitrary code execution on the page,
                         possibly by attackers.
                 <br>Severity ${unsafeEvalSeverity}.
+            </li>`);
+        }
+
+        // --------
+
+        // --- CHECK -----
+        // unsafe-inline shouldn't be included without a nonce
+        let listOfDirectivesWhichUseUnsafeInline = [];
+        for(const [directive, sources] of Object.entries(csp)) {
+            // look for unsafe-inline
+            let foundUnsafeInline = false;
+            sources.forEach(function (src) {
+                if(src === "'unsafe-inline'") {
+                    foundUnsafeInline = true;
+                }
+            });
+            let foundNonce = false;
+            if(foundUnsafeInline) {
+                sources.forEach(function (src) {
+                    if(src.includes("nonce")) {
+                        foundNonce = true;
+                    }
+                });
+            }
+            if(foundUnsafeInline && !foundNonce) {
+                listOfDirectivesWhichUseUnsafeInline.push(directive);
+            }
+        }
+        if(listOfDirectivesWhichUseUnsafeInline.length > 0) {
+            let unsafeInlineSeverity = 8;
+            maxSeverity = Math.max(maxSeverity, unsafeInlineSeverity);
+            failures.push(
+                `<li class="critical">
+                The CSP declares '<code>unsafe-inline</code>' within directive${listOfDirectivesWhichUseUnsafeEval.length > 1 ? "s" : ""}:
+                ${listOfDirectivesWhichUseUnsafeEval.map((d) => `<code>${d}</code>`).join(", ")}.
+                <br> This allows for inline <code>&lt;script&gt;</code> code, which may be subject to XSS.
+                        Consider using a <code>nonce-</code> directive.
+                <br>Severity ${unsafeInlineSeverity}.
             </li>`);
         }
 

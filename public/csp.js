@@ -1,6 +1,7 @@
 let messengerCSP = `default-src * data: blob:;script-src *.facebook.com *.fbcdn.net *.facebook.net *.google-analytics.com *.virtualearth.net *.google.com 127.0.0.1:* *.spotilocal.com:* 'unsafe-inline' 'unsafe-eval' blob: data: 'self' *.messenger.com;style-src data: blob: 'unsafe-inline' * *.messenger.com;connect-src *.facebook.com facebook.com *.fbcdn.net *.facebook.net *.spotilocal.com:* wss://*.facebook.com:* https://fb.scanandcleanlocal.com:* attachment.fbsbx.com ws://localhost:* blob: *.cdninstagram.com 'self' *.messenger.com wss://*.messenger.com:*;font-src *.messenger.com *.facebook.com static.xx.fbcdn.net data:;`;
 let noDefaultTwoStars = "img-src *; media-src *; style-src: 'self'";
 let unsafeEval = "default-src 'unsafe-eval'";
+let unsafeInline = "default-src 'unsafe-inline'";
 
 const PASS_RESULT = {
     severity: 0
@@ -129,6 +130,44 @@ function checkFunction(testCspString) { // TODO this won't be the actual args
             </li>`);
     }
 
+    // --------
+
+    // --- CHECK -----
+    // unsafe-inline shouldn't be included without a nonce
+    let listOfDirectivesWhichUseUnsafeInline = [];
+    for(const [directive, sources] of Object.entries(csp)) {
+        // look for unsafe-inline
+        let foundUnsafeInline = false;
+        sources.forEach(function (src) {
+            if(src === "'unsafe-inline'") {
+                foundUnsafeInline = true;
+            }
+        });
+        let foundNonce = false;
+        if(foundUnsafeInline) {
+            sources.forEach(function (src) {
+                if(src.includes("nonce")) {
+                    foundNonce = true;
+                }
+            });
+        }
+        if(foundUnsafeInline && !foundNonce) {
+            listOfDirectivesWhichUseUnsafeInline.push(directive);
+        }
+    }
+    if(listOfDirectivesWhichUseUnsafeInline.length > 0) {
+        let unsafeInlineSeverity = 8;
+        maxSeverity = Math.max(maxSeverity, unsafeInlineSeverity);
+        failures.push(
+            `<li class="critical">
+                The CSP declares '<code>unsafe-inline</code>' within directive${listOfDirectivesWhichUseUnsafeEval.length > 1 ? "s" : ""}:
+                <br> ${listOfDirectivesWhichUseUnsafeEval.join(", ")}.
+                <br> This allows for inline <code>&lt;script&gt;</code> code, which may be subject to XSS.
+                        Consider using a <code>nonce-</code> directive.
+                <br>Severity ${unsafeInlineSeverity}.
+            </li>`);
+    }
+
     // --- RETURN RESULTS -----
     if(failures.length === 0) {
         return PASS_RESULT;
@@ -143,6 +182,7 @@ function checkFunction(testCspString) { // TODO this won't be the actual args
     }
 }
 
-console.log(checkFunction(messengerCSP));
-console.log(checkFunction(noDefaultTwoStars));
+// console.log(checkFunction(messengerCSP));
+// console.log(checkFunction(noDefaultTwoStars));
 console.log(checkFunction(unsafeEval));
+console.log(checkFunction(unsafeInline));
