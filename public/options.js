@@ -14,8 +14,6 @@ function saveOptions() {
         })
     }
 
-    console.log('rules', parsedRules);
-
     chrome.storage.sync.set({
         rules: parsedRules
     }, function () {

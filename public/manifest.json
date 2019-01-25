@@ -10,7 +10,7 @@
     "default_title": "Open the popup"
   },
   "background": {
-    "persistent": false,
+    "persistent": true,
     "scripts": [
       "background.js",
       "defaults.js"
@@ -31,6 +31,8 @@
   },
   "permissions": [
     "storage",
-    "tabs"
+    "tabs",
+    "webRequest",
+    "*://*/*"
   ]
 }

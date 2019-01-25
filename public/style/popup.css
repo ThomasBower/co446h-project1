@@ -22,8 +22,13 @@ li:nth-of-type(2n) {
     margin-right: 5px;
 }
 
-.fail > .checkmark, .fail > .exclamation, 
+.fail > .checkmark, .fail > .exclamation,
 .pass > .cross, .pass > .exclamation,
 .warn > .checkmark, .warn > .cross {
     display: none;
+}
+
+.cant-run {
+    text-align: center;
+    padding: 1rem;
 }

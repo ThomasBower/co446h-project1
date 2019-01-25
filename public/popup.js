@@ -1,4 +1,15 @@
-chrome.runtime.sendMessage({ type: 'getResults' }, results => results.forEach(outputResults));
+chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    let currTab = tabs[0];
+
+    if (checkInternal(currTab.url)) {
+        return document.getElementById("checkResults").appendChild(
+            htmlToElement(`<p class="cant-run">Web Audit cannot run on this page.</p>`));
+    }
+
+    chrome.runtime.sendMessage({ type: 'getResults', tabId: currTab.id }, results => {
+        return results.forEach(outputResults);
+    });
+});
 
 function htmlToElement(html) {
     var template = document.createElement('template');
@@ -39,3 +50,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+function checkInternal(urlString) {
+    const protocol = (new URL(urlString)).protocol.slice(0, -1);
+    return protocol === 'chrome' || protocol === 'chrome-extension';
+}
