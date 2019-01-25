@@ -52,24 +52,24 @@ function checkFunction(testCspString) { // TODO this won't be the actual args
         maxSeverity = Math.max(maxSeverity, 8);
         failures.push(
             `<li class="critical">
-                You have a <code>script-src</code> directive but not a <code>object-src</code> directive.
-                This can leave you open to XSS attacks, because malicious code in a less secure policy
+                The CSP has a <code>script-src</code> directive but not a <code>object-src</code> directive.
+                This can leave the page open to XSS attacks, because malicious code in a less secure policy
                 can bypass the more secure policy, if part of <code>&lt;script&gt;</code> or <code>&lt;object>&gt;</code> tags. 
             </li>`);
     } else if(!('script-src' in csp) && ('object-src' in csp)) {
         maxSeverity = Math.max(maxSeverity, 8);
         failures.push(
             `<li class="critical">
-                You have a <code>object-src</code> directive but not a <code>script-src</code> directive.
-                This can leave you open to XSS attacks, because malicious code in a less secure policy
+                The CSP has a <code>object-src</code> directive but not a <code>script-src</code> directive.
+                This can leave the page open to XSS attacks, because malicious code in a less secure policy
                 can bypass the more secure policy, if part of <code>&lt;script&gt;</code> or <code>&lt;object>&gt;</code> tags. 
             </li>`);
     } else if(!('script-src' in csp) && !('object-src' in csp) && !('default-src' in csp)) {
         maxSeverity = Math.max(maxSeverity, 8);
         failures.push(
             `<li class="critical">
-                You have no <code>object-src</code>, <code>script-src</code> or <code>default-src</code>directives.
-                This can leave you open to XSS attacks,
+                The CSP has no <code>object-src</code>, <code>script-src</code> or <code>default-src</code>directives.
+                This can leave the page open to XSS attacks,
                 as you have no policy covering the content of <code>&lt;script&gt;</code> or <code>&lt;object>&gt;</code> tags. 
             </li>`);
     }
@@ -97,7 +97,7 @@ function checkFunction(testCspString) { // TODO this won't be the actual args
         maxSeverity = Math.max(maxSeverity, starFailureSeverity);
         failures.push(
             `<li class="critical">
-                You are using a wildcard '<code>*</code>'
+                The CSP is using a wildcard '<code>*</code>'
                 for the following directive${listOfDirectivesWhichHaveStarFailures.length > 1 ? "s" : ""}:
                 <br> ${listOfDirectivesWhichHaveStarFailures.join(", ")}.
                 <br> Severity ${starFailureSeverity}.
@@ -136,7 +136,7 @@ function checkFunction(testCspString) { // TODO this won't be the actual args
         return {
             severity: maxSeverity,
             remedy: `
-                <p>You have the following problem${failures.length > 1 ? "s" : ""} with your Content Security Policy</p>
+                <p>The CSP has the following problem${failures.length > 1 ? "s" : ""} with its Content Security Policy</p>
                 <ul class="failures">${failures.join()}</ul>
                 `
         };
