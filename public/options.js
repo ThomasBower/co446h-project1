@@ -28,12 +28,9 @@ function saveOptions() {
 
 function restoreOptions() {
     numRules = 0;
-    chrome.storage.sync.get(['rules', 'defaultRules'], function ({ rules, defaultRules }) {
-        for (let rule of defaultRules) {
-            addRule(rule, true);
-        }
+    chrome.extension.getBackgroundPage().getRules().then(rules => {
         for (let rule of rules) {
-            addRule(rule);
+            addRule(rule, rule.builtIn);
         }
         document.querySelectorAll('.delete').forEach((button) => {
             button.addEventListener('click', function(e) {

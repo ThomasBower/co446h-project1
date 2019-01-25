@@ -380,7 +380,7 @@ const DefaultRules = [{
         }
     }
 }].map(rule => ({
-    ...rule, checkFunctionBody: getFunctionBody(rule.checkFunction)
+    ...rule, checkFunctionBody: getFunctionBody(rule.checkFunction), builtIn: true
 }));
 
 function getFunctionBody(func) {

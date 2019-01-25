@@ -7,7 +7,7 @@ const LOAD_BADGE_COLOUR = [70, 136, 241, 255];
 const tabs = {};
 
 function getRules() {
-    return new Promise(res => chrome.storage.sync.get(['rules', 'defaultRules'],
+    return new Promise(res => chrome.storage.sync.get(['rules'],
         ({ rules }) => res(DefaultRules.concat((rules || [])))));
 }
 
