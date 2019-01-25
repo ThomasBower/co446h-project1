@@ -176,12 +176,6 @@ const DefaultRules = [{
             csp[operator] = arguments;
         });
         // --------------------------------
-        console.log(' ');
-        console.log('----------------------------');
-        console.log('------ CSP OBJECT ---------');
-        console.log(csp);
-        console.log('----------------------------');
-        console.log(' ');
 
         let maxSeverity = 0;
         let failures = [];
