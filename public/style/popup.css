@@ -4,9 +4,8 @@ html, body {
     width: 480px;
 }
 
-li {
-    color: #333;
-    font-size: 1.2em;
+.pass, .fail, .warn {
+    font-size: 1.2rem;
     padding: 10px;
 }
 
@@ -22,15 +21,11 @@ summary {
     outline: none;
 }
 
-.empty summary::-webkit-details-marker {
-    opacity: 0;
-}
-
 .icon {
     display: inline-block;
     vertical-align: middle;
-    width: 1.2em;
-    height: 1.2em;
+    width: 1.2rem;
+    height: 1.2rem;
     margin-right: 5px;
 }
 
@@ -38,4 +33,32 @@ summary {
 .pass .cross, .pass .exclamation,
 .warn .checkmark, .warn .cross {
     display: none;
+}
+
+.failures li {
+    font-size: 0.9rem;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+.failures li.critical {
+    border-color: #f64f59;
+    color: #f64f59;
+    background-color: #f3aeb3;
+}
+
+.failures li.non-critical {
+    border-color: #c4ad00;
+    color: #c4ad00;
+    background-color: #f8e975;
+}
+
+.failures li code {
+    padding: 2px;
+    border-radius: 5px;
+    background-color: rgba(0,0,0,.05);
+    color: inherit;
+    line-height: 1.4rem;
 }

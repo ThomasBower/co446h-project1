@@ -14,10 +14,6 @@ fieldset {
     padding: 20px;
 }
 
-fieldset summary + p {
-    margin-top: 100px;
-}
-
 fieldset, input, select, textarea {
     border: 1px solid #ddd;
     border-radius: 5px;

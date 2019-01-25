@@ -19,7 +19,7 @@ function htmlToElement(html) {
 //   }
 function outputResults(results) {
     document.getElementById("checkResults").appendChild(htmlToElement(
-        `<li class="${results.status} ${!results.remedy && !results.rule.link ? 'empty' : ''}">
+        `<li class="${results.status}">
             <details>
                 <summary>
                     <img src="img/checkmark.svg" class="icon checkmark" alt="Checkmark" />
@@ -27,7 +27,7 @@ function outputResults(results) {
                     <img src="img/warn.svg" class="icon exclamation" alt="Warn" />
                     ${results.rule.name}
                 </summary>
-                ${!results.remedy ? '' : `<p>${results.remedy}</p>`}
+                ${!results.remedy ? '<p>No errors to report.</p>' : `<p>${results.remedy}</p>`}
                 ${!results.rule.link ? '' : `<a class="button" href="${results.rule.link}" target="_blank" rel="noreferrer">Learn More</a>`}
             </details>
         </li>`
