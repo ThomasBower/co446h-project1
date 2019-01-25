@@ -3,12 +3,12 @@ const REQUEST_TIME_THRESHOLD = 50;
 const FAIL_BADGE_COLOUR = [246, 79, 89, 255];
 const WARN_BADGE_COLOUR = [255, 224, 0, 255];
 const PASS_BADGE_COLOUR = [56, 239, 125, 255];
-const LOAD_BADGE_COLOUR = [70, 136, 241, 255];
+const LOAD_BADGE_COLOUR = [70, 136, 241, 255];``
 const tabs = {};
 
 function getRules() {
     return new Promise(res => chrome.storage.sync.get(['rules', 'defaultRules'],
-        ({ rules, defaultRules }) => res([...(defaultRules || []), ...(rules || [])])));
+        ({ rules }) => res(DefaultRules.concat((rules || [])))));
 }
 
 function runChecks() {
