@@ -19,7 +19,7 @@ fieldset, input, select, textarea {
     border-radius: 5px;
 }
 
-input, select, textarea, button {
+input, select, textarea {
     margin-top: 10px;
     padding: 10px;
 }
@@ -27,18 +27,6 @@ input, select, textarea, button {
 textarea {
     min-height: 4rem;
     resize: vertical;
-}
-
-button {
-    transition: all 0.3s ease-in-out;
-    border-radius: 5px;
-    border-width: 1px;
-    color: #fff;
-}
-
-button:hover {
-    background: linear-gradient(to left, #0f776e, #35e077);
-    box-shadow: 0 2px 1px rgba(0,0,0,.1);
 }
 
 label {
@@ -92,4 +80,8 @@ abbr[title=required], #status {
 
 #status.show {
     opacity: 1;
+}
+
+.delete {
+    float: right;
 }

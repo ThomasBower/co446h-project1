@@ -11,11 +11,27 @@ body {
     background-color: #fcfcfc;
 }
 
-header, button {
+header, button, .button {
     font-family: 'Sarabun', sans-serif;
     background: linear-gradient(to left, #0c645d, #30c96b);
     border: 0 solid #107a71;
     user-select: none;
+}
+
+button, .button {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px;
+    transition: all 0.3s ease-in-out;
+    border-radius: 5px;
+    border-width: 1px;
+    color: #fff;
+    text-decoration: none;
+}
+
+button:hover, .button:hover {
+    background: linear-gradient(to left, #0f776e, #35e077);
+    box-shadow: 0 2px 1px rgba(0,0,0,.1);
 }
 
 header {

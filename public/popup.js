@@ -1,3 +1,5 @@
+const MAX_RATING = 10;
+
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     let currTab = tabs[0];
 
@@ -31,12 +33,16 @@ function htmlToElement(html) {
 function outputResults(results) {
     document.getElementById("checkResults").appendChild(htmlToElement(
         `<li class="${results.status}">
-            <img src="img/checkmark.svg" class="icon checkmark" alt="Checkmark" />
-            <img src="img/cross.svg" class="icon cross" alt="Cross" />
-            <img src="img/warn.svg" class="icon exclamation" alt="Warn" />
-            ${results.rule.name}
-            ${!results.remedy ? '' : `<h3>Remedy:</h3><p>${results.remedy}</p>`}
-            ${!results.link ? '' : `<a href="${results.link}" target="_blank" rel="noreferrer">More</a>`}
+            <details>
+                <summary>
+                    <img src="img/checkmark.svg" class="icon checkmark" alt="Checkmark" />
+                    <img src="img/cross.svg" class="icon cross" alt="Cross" />
+                    <img src="img/warn.svg" class="icon exclamation" alt="Warn" />
+                    ${results.rule.name} (<span class="rating">${Math.max(0, MAX_RATING - Math.round(results.severity))}/${MAX_RATING}</span>)
+                </summary>
+                ${!results.remedy ? '<p>No errors to report.</p>' : `<p>${results.remedy}</p>`}
+                ${!results.rule.link ? '' : `<a class="button" href="${results.rule.link}" target="_blank" rel="noreferrer">Learn More</a>`}
+            </details>
         </li>`
     ));
 }
